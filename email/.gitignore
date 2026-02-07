@@ -1,3 +1,6 @@
+## Project
+.env
+
 # Arquivos e pastas comuns de build
 /build/
 target/
@@ -95,10 +98,6 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Arquivos de ambiente
-.env
-.env.*
 
 # Arquivos de lock
 package-lock.json
