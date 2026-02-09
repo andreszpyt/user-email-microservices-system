@@ -2,6 +2,7 @@ package dev.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class UserModel {
+public class UserModel implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
