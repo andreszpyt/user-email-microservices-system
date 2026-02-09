@@ -1,0 +1,2 @@
+ALTER TABLE users_tb ADD COLUMN role VARCHAR(20) DEFAULT 'USER';
+UPDATE users_tb SET role = 'USER' WHERE role IS NULL;

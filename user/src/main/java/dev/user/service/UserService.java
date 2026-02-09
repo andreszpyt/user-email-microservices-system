@@ -7,6 +7,7 @@ import dev.user.dto.LoginRequest;
 import dev.user.dto.UserMapper;
 import dev.user.dto.UserRequest;
 import dev.user.dto.UserResponse;
+import dev.user.enums.Role;
 import dev.user.repository.UserRepository;
 import dev.user.security.TokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,7 @@ public class UserService {
 
     public UserResponse save(UserRequest userRequest) {
         UserModel user = userMapper.toDomain(userRequest);
+        user.setRole(Role.USER);
 
         if(userRepository.findByUsername(user.getUsername()) != null){
             throw new CredentialAlreadyExistsException("Username already exists");
