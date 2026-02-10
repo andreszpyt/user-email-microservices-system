@@ -4,6 +4,8 @@ import dev.user.dto.LoginRequest;
 import dev.user.dto.UserRequest;
 import dev.user.dto.UserResponse;
 import dev.user.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +21,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody UserRequest userRequest) {
-        return userService.save(userRequest);
+    public ResponseEntity<UserResponse> register(@RequestBody UserRequest userRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userRequest));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
-        return userService.login(loginRequest);
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.login(loginRequest));
     }
 }

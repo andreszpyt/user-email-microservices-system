@@ -8,8 +8,10 @@ import dev.user.dto.UserMapper;
 import dev.user.dto.UserRequest;
 import dev.user.dto.UserResponse;
 import dev.user.enums.Role;
+import dev.user.producer.UserProducer;
 import dev.user.repository.UserRepository;
 import dev.user.security.TokenService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +21,17 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final UserProducer userProducer;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, TokenService tokenService) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, TokenService tokenService, UserProducer userProducer) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+        this.userProducer = userProducer;
     }
 
+    @Transactional
     public UserResponse save(UserRequest userRequest) {
         UserModel user = userMapper.toDomain(userRequest);
         user.setRole(Role.USER);
@@ -43,6 +48,7 @@ public class UserService {
         user.setPassword(encodedPassword);
 
         UserModel savedUser = userRepository.save(user);
+        userProducer.publishEmailMessage(savedUser);
         return userMapper.toResponse(savedUser);
     }
 
