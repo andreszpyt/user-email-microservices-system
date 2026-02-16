@@ -22,6 +22,9 @@ spring:
     virtual-host: ${MQ_USER}
     ssl:
       enabled: true
+    template:
+      exchange: app-exchange
+      routing-key: email.welcome
 
 server:
   port: 8082

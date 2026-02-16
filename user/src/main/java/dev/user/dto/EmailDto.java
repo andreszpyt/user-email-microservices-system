@@ -1,8 +1,12 @@
 package dev.user.dto;
 
+import java.util.UUID;
+
 public record EmailDto(
-        String subject,
-        String body,
-        String emailTo
+        UUID userId,
+        String emailFrom,
+        String emailTo,
+        String emailSubject,
+        String emailBody
 ) {
 }
