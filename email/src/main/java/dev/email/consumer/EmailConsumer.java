@@ -1,5 +1,6 @@
 package dev.email.consumer;
 
+import dev.email.configuration.RabbitMQConstants;
 import dev.email.dto.EmailDto;
 import dev.email.dto.EmailMapper;
 import dev.email.service.MailService;
@@ -18,9 +19,9 @@ public class EmailConsumer {
         this.emailMapper = emailMapper;
     }
 
-    @RabbitListener(queues = "email-queue")
+    @RabbitListener(queues = RabbitMQConstants.QUEUE_EMAIL)
     public void listenEmailQueue(@Payload EmailDto emailDto){
-        mailService.sendEmail(EmailMapper.toEmailModel(emailDto));
+        mailService.sendEmail(emailMapper.toDomain(emailDto));
     }
 
 }

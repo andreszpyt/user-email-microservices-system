@@ -33,3 +33,4 @@ api:
   security:
     token:
       secret: ${SECRET}
+      expiration-hours: 2

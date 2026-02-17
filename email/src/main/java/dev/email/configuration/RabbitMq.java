@@ -13,11 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMq {
 
-    private final String queueName = "email-queue";
-
     @Bean
     public Queue queue() {
-        return new Queue(queueName, true);
+        return new Queue(RabbitMQConstants.QUEUE_EMAIL, true);
     }
 
     @Bean
@@ -28,11 +26,11 @@ public class RabbitMq {
 
     @Bean
     public TopicExchange appExchange() {
-        return new TopicExchange("app-exchange");
+        return new TopicExchange(RabbitMQConstants.EXCHANGE_NAME);
     }
 
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("email.#");
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitMQConstants.ROUTING_KEY_EMAIL_ALL);
     }
 }

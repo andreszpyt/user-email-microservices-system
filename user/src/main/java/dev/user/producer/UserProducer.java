@@ -1,9 +1,9 @@
 package dev.user.producer;
 
+import dev.user.configuration.RabbitMQConstants;
 import dev.user.domain.UserModel;
 import dev.user.dto.EmailDto;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,17 +14,23 @@ public class UserProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @Value("${spring.rabbitmq.template.exchange}")
-    private String exchangeName;
-    @Value("${spring.rabbitmq.template.routing-key}")
-    private String routingKey;
-
     public void publishEmailMessage(UserModel user) {
+        var emailDto = new EmailDto(
+                user.getId(),
+                null,
+                user.getEmail(),
+                "Welcome to our service!",
+                "Dear " + user.getUsername() + ",\n\nThank you for registering with us. We're excited to have you on board!\n\nBest regards,\nThe Team"
+        );
+
         try {
-            EmailDto emailDto = new EmailDto(user.getId(), "Olá " + user.getUsername(), user.getEmail(), "Sucessful Registration", "Welcome to our platform! Your registration was successful.");
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, emailDto);
-        }catch (Exception e){
-            throw new RuntimeException("Email sending failed");
+            rabbitTemplate.convertAndSend(
+                    RabbitMQConstants.EXCHANGE_NAME,
+                    RabbitMQConstants.ROUTING_KEY_WELCOME,
+                    emailDto
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Failed email sender", e);
         }
     }
 }
