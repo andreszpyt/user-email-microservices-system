@@ -2,11 +2,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16
-    container_name: ms-user-db
     environment:
-      POSTGRES_DB: ms-user-ms
-      POSTGRES_USER: postgres-user
-      POSTGRES_PASSWORD: postgres-password
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    container_name: ms-user-db
     ports:
       - "5435:5432"
     volumes:
