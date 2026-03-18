@@ -7,6 +7,7 @@ import dev.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,9 @@ public class UserController {
         this.userService = userService;
     }
 
+
     @PostMapping("/register")
+    @Transactional
     public ResponseEntity<UserResponse> register(@RequestBody @Valid UserRequest userRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userRequest));
     }

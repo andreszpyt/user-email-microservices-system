@@ -30,12 +30,23 @@ public class MailService {
     @Value("${spring.mail.username}")
     String emailFrom;
 
+    @SuppressWarnings("all")
     public EmailModel sendEmail(EmailModel emailModel) {
 
         emailModel.setEmailStatus(EmailStatus.PENDING);
+        emailModel.setEmailFrom(emailFrom);
         emailModel = emailRepository.save(emailModel);
 
         try {
+            // Validações básicas
+            if (emailModel.getEmailTo() == null || emailModel.getEmailTo().isEmpty()) {
+                throw new IllegalArgumentException("Email destination cannot be null or empty");
+            }
+            
+            if (emailFrom == null || emailFrom.isEmpty()) {
+                throw new IllegalArgumentException("SMTP username not configured (spring.mail.username)");
+            }
+
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
@@ -48,11 +59,15 @@ public class MailService {
 
             emailModel.setEmailStatus(EmailStatus.SENT);
             emailRepository.save(emailModel);
-            logger.info("Email sent to {}", emailModel.getEmailTo());
+            logger.info("✅ Email sent successfully to {}", emailModel.getEmailTo());
         } catch (MessagingException | RuntimeException ex) {
             emailModel.setEmailStatus(EmailStatus.FAILED);
             emailRepository.save(emailModel);
-            logger.error("Failed to send email to {}: {}", emailModel.getEmailTo(), ex.getMessage(), ex);
+            logger.error("❌ Failed to send email to {}: {} - {}", 
+                    emailModel.getEmailTo(), 
+                    ex.getClass().getSimpleName(),
+                    ex.getMessage(), 
+                    ex);
         }
 
         return emailModel;
