@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db-user:
+    image: postgres:16
+    container_name: ms-user-db
+    environment:
+      POSTGRES_DB: ${DB_NAME_USER}
+      POSTGRES_USER: ${DB_USER_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_USER}
+    ports:
+    volumes:
+      - pgdata_user:/var/lib/postgresql/data
+
+  db-mail:
+    image: postgres:16
+    container_name: ms-mail-db
+    environment:
+      POSTGRES_DB: ${DB_NAME_MAIL}
+      POSTGRES_USER: ${DB_USER_MAIL}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_MAIL}
+    ports:
+    volumes:
+      - pgdata_mail:/var/lib/postgresql/data
+
+volumes:
+  pgdata_user:
+  pgdata_mail:
